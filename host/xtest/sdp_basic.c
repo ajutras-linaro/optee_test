@@ -119,6 +119,8 @@ int allocate_ion_buffer(size_t size, int heap_type_id, int verbosity)
 	int fd = -1;
 	unsigned int idx = 0;
 
+	printf("allocate_ion_buffer: Open ION device\n");
+
 	ion = open("/dev/ion", O_RDWR);
 	if (ion < 0) {
 		fprintf(stderr, "Error: failed to open /dev/ion\n");
@@ -129,14 +131,20 @@ int allocate_ion_buffer(size_t size, int heap_type_id, int verbosity)
 		return fd;
 	}
 
+	printf("allocate_ion_buffer: Validate heap ID\n");
+
 	if (heap_type_id < 0)
 		heap_type_id = DEFAULT_ION_HEAP_TYPE;
 
+	printf("allocate_ion_buffer: Query number of heaps\n");
+	memset(&query_data, 0, sizeof(query_data));
 	if (ioctl(ion, ION_IOC_HEAP_QUERY, &query_data) < 0) {
 		fprintf(stderr, "Error: failed to query the number of heaps\n");
 		goto out;
 	}
+	printf("allocate_ion_buffer: There are %u heaps\n", query_data.cnt);
 
+	printf("allocate_ion_buffer: Get heap data\n");
 	query_data.heaps = (__u64)(unsigned long)&heap_data;
 	if (ioctl(ion, ION_IOC_HEAP_QUERY, &query_data) < 0) {
 		fprintf(stderr, "Info: can't query heaps data, try old API\n");
@@ -144,16 +152,28 @@ int allocate_ion_buffer(size_t size, int heap_type_id, int verbosity)
 		goto out;
 	}
 
-	for (idx = 0; idx < query_data.cnt; idx++)
+#if 0
+	printf("allocate_ion_buffer: Find heap with proper type (%d)\n", heap_type_id);
+	for (idx = 0; idx < query_data.cnt; idx++) {
+		printf("allocate_ion_buffer: Heap %u (%s) has type (%u)\n", idx, heap_data[idx].name, heap_data[idx].type);
 		if (heap_data[idx].type == (unsigned int)heap_type_id)
 			break;
+	}
 	if (idx == query_data.cnt) {
 		fprintf(stderr, "Error: target heap type %d not found\n",
 				heap_type_id);
 		goto out;
 	}
+#else
+	if ((unsigned int)heap_type_id >= query_data.cnt) {
+		fprintf(stderr, "Error: Invalid heap ID (%d)\n", heap_type_id);
+		goto out;
+	}
 
-	verbose("Allocate in ION heap '%s' (type=%u, id=%u)\n",
+	idx = heap_type_id;
+#endif
+
+	printf("Allocate in ION heap '%s' (type=%u, id=%u)\n",
 		heap_data[idx].name, heap_data[idx].type,
 		heap_data[idx].heap_id);
 
@@ -165,8 +185,11 @@ int allocate_ion_buffer(size_t size, int heap_type_id, int verbosity)
 		goto out;
 	}
 
+	printf("allocate_ion_buffer: Done\n");
+
 	fd = alloc_data.fd;
 out:
+	printf("allocate_ion_buffer: Close ION device\n");
 	close(ion);
 	return fd;
 }
