@@ -21,6 +21,7 @@ include $(CLEAR_VARS)
 LOCAL_MODULE := xtest
 LOCAL_VENDOR_MODULE := true
 LOCAL_SHARED_LIBRARIES := libteec
+LOCAL_STATIC_LIBRARIES := libcrypto
 
 TA_DIR ?= /vendor/lib/optee_armtz
 
@@ -48,6 +49,7 @@ srcs +=	adbg/src/adbg_case.c \
 	regression_7000.c \
 	regression_8000.c \
 	regression_8100.c \
+	ecdsa_alldigest.c \
 	sha_perf.c \
 	stats.c \
 	xtest_helpers.c \
