@@ -209,8 +209,6 @@ struct xtest_ac_case {
 
 	const uint8_t *ptx;
 	size_t ptx_len;
-	const uint8_t *ctx;
-	size_t ctx_len;
 	size_t line;
 };
 
@@ -223,7 +221,6 @@ struct xtest_ac_case {
 #define XTEST_AC_CASE(level, algo, mode, hash_algo, vect, union_params) \
 	{ level, (algo), (mode), (hash_algo), .params = union_params, \
 	  ARRAY(vect ## _ptx), \
-	  ARRAY(vect ## _out), \
 	  __LINE__ }
 
 #define XTEST_AC_ECDSA_UNION(vect) \
@@ -236,11 +233,83 @@ struct xtest_ac_case {
 #define XTEST_AC_ECDSA_CASE(level, algo, mode, hash_algo, vect) \
 	XTEST_AC_CASE(level, algo, mode, hash_algo, vect, XTEST_AC_ECDSA_UNION(vect))
 
+static const uint8_t vts_ecdsa_521_testvector_ptx[] = {
+/* Msg */
+	0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x30,
+};
+static const uint8_t vts_ecdsa_521_testvector_private[] = {
+/* d */
+	0x00, 0x11, 0x45, 0x8c, 0x58, 0x6d, 0xb5, 0xda, 0xa9, 0x2a, 0xfa, 0xb0, 0x3f, 0x4f, 0xe4, 0x6a, 0xa9,
+	0xd9, 0xc3, 0xce, 0x9a, 0x9b, 0x7a, 0x00, 0x6a, 0x83, 0x84, 0xbe, 0xc4, 0xc7, 0x8e, 0x8e, 0x9d, 
+	0x18, 0xd7, 0xd0, 0x8b, 0x5b, 0xcf, 0xa0, 0xe5, 0x3c, 0x75, 0xb0, 0x64, 0xad, 0x51, 0xc4, 0x49, 
+	0xba, 0xe0, 0x25, 0x8d, 0x54, 0xb9, 0x4b, 0x1e, 0x88, 0x5d, 0xed, 0x08, 0xed, 0x4f, 0xb2, 0x5c, 
+	0xe9
+};
+static const uint8_t vts_ecdsa_521_testvector_public_x[] = {
+/* Qx */
+	0x01, 0x49, 0xec, 0x11, 0xc6, 0xdf, 0x0f, 0xa1, 0x22, 0xc6, 0xa9, 0xaf, 0xd9, 0x75, 0x4a, 0x4f, 
+	0xa9, 0x51, 0x3a, 0x62, 0x7c, 0xa3, 0x29, 0xe3, 0x49, 0x53, 0x5a, 0x56, 0x29, 0x87, 0x5a, 0x8a, 
+	0xdf, 0xbe, 0x27, 0xdc, 0xb9, 0x32, 0xc0, 0x51, 0x98, 0x63, 0x77, 0x10, 0x8d, 0x05, 0x4c, 0x28, 
+	0xc6, 0xf3, 0x9b, 0x6f, 0x2c, 0x9a, 0xf8, 0x18, 0x02, 0xf9, 0xf3, 0x26, 0xb8, 0x42, 0xff, 0x2e, 
+	0x5f, 0x3c, 
+};
+static const uint8_t vts_ecdsa_521_testvector_public_y[] = {
+/* Qy */
+	0x00, 0xab, 0x76, 0x35, 0xcf, 0xb3, 0x61, 0x57, 0xfc, 0x08, 0x82, 0xd5, 0x74, 0xa1, 0x0d, 0x83, 0x9c, 
+	0x1a, 0x0c, 0x04, 0x9d, 0xc5, 0xe0, 0xd7, 0x75, 0xe2, 0xee, 0x50, 0x67, 0x1a, 0x20, 0x84, 0x31, 
+	0xbb, 0x45, 0xe7, 0x8e, 0x70, 0xbe, 0xfe, 0x93, 0x0d, 0xb3, 0x48, 0x18, 0xee, 0x4d, 0x5c, 0x26, 
+	0x25, 0x9f, 0x5c, 0x6b, 0x8e, 0x28, 0xa6, 0x52, 0x95, 0x0f, 0x9f, 0x88, 0xd7, 0xb4, 0xb2, 0xc9, 
+	0xd9, 
+};
+
+static const uint8_t vts_ecdsa_256_testvector_ptx[] = {
+/* Msg */
+	0x31, 0x32, 0x33, 0x34, 0x35, 0x36, 0x37, 0x38, 0x39, 0x30,
+};
+static const uint8_t vts_ecdsa_256_testvector_private[] = {
+/* d */
+	0x73, 0x7c, 0x2e, 0xcd, 0x7b, 0x8d, 0x19, 0x40, 0xbf, 0x29, 0x30, 0xaa, 0x9b, 0x4e, 0xd3, 0xff, 
+	0x94, 0x1e, 0xed, 0x09, 0x36, 0x6b, 0xc0, 0x32, 0x99, 0x98, 0x64, 0x81, 0xf3, 0xa4, 0xd8, 0x59, 
+};
+static const uint8_t vts_ecdsa_256_testvector_public_x[] = {
+/* Qx */
+	0xbf, 0x85, 0xd7, 0x72, 0x0d, 0x07, 0xc2, 0x54, 0x61, 0x68, 0x3b, 0xc6, 0x48, 0xb4, 0x77, 0x8a, 
+	0x9a, 0x14, 0xdd, 0x8a, 0x02, 0x4e, 0x3b, 0xdd, 0x8c, 0x7d, 0xdd, 0x9a, 0xb2, 0xb5, 0x28, 0xbb, 
+};
+static const uint8_t vts_ecdsa_256_testvector_public_y[] = {
+/* Qy */
+	0xc7, 0xaa, 0x1b, 0x51, 0xf1, 0x4e, 0xbb, 0xbb, 0x0b, 0xd0, 0xce, 0x21, 0xbc, 0xc4, 0x1c, 0x6e, 
+	0xb0, 0x00, 0x83, 0xcf, 0x33, 0x76, 0xd1, 0x1f, 0xd4, 0x49, 0x49, 0xe0, 0xb2, 0x18, 0x3b, 0xfe, 
+};
+
 static const struct xtest_ac_case xtest_ac_cases[] = {
 	/* ECDSA tests */
+	/* From VTS test case */
+	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, TEE_ALG_SHA1,
+			    vts_ecdsa_256_testvector),
+	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, TEE_ALG_SHA224,
+			    vts_ecdsa_256_testvector),
+	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, TEE_ALG_SHA256,
+			    vts_ecdsa_256_testvector),
+	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, TEE_ALG_SHA384,
+			    vts_ecdsa_256_testvector),
+	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, TEE_ALG_SHA512,
+			    vts_ecdsa_256_testvector),
+
+	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
+			    vts_ecdsa_521_testvector),
+	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
+			    vts_ecdsa_521_testvector),
+	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
+			    vts_ecdsa_521_testvector),
+	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
+			    vts_ecdsa_521_testvector),
+	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
+			    vts_ecdsa_521_testvector),
+
 	/* [P-224] */
 	/* SHA1 hash */
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P224, TEE_MODE_SIGN, TEE_ALG_SHA1,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P224, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_16),
 	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P224, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_17),
@@ -274,7 +343,7 @@ static const struct xtest_ac_case xtest_ac_cases[] = {
 
 	/* [P-224] */
 	/* SHA224 hash */
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P224, TEE_MODE_SIGN, TEE_ALG_SHA224,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P224, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_16),
 	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P224, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_17),
@@ -307,7 +376,7 @@ static const struct xtest_ac_case xtest_ac_cases[] = {
 
 	/* [P-224] */
 	/* SHA256 hash */
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P224, TEE_MODE_SIGN, TEE_ALG_SHA256,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P224, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_16),
 	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P224, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_17),
@@ -340,7 +409,7 @@ static const struct xtest_ac_case xtest_ac_cases[] = {
 
 	/* [P-224] */
 	/* SHA384 hash */
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P224, TEE_MODE_SIGN, TEE_ALG_SHA384,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P224, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_16),
 	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P224, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_17),
@@ -373,7 +442,7 @@ static const struct xtest_ac_case xtest_ac_cases[] = {
 
 	/* [P-224] */
 	/* SHA512 hash */
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P224, TEE_MODE_SIGN, TEE_ALG_SHA512,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P224, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_16),
 	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P224, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_17),
@@ -505,7 +574,7 @@ static const struct xtest_ac_case xtest_ac_cases[] = {
 
 	/* [P-256] */
 	/* SHA384 hash */
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, TEE_ALG_SHA384,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_31),
 	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_32),
@@ -538,7 +607,7 @@ static const struct xtest_ac_case xtest_ac_cases[] = {
 
 	/* [P-256] */
 	/* SHA512 hash */
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, TEE_ALG_SHA512,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_31),
 	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P256, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_32),
@@ -571,7 +640,7 @@ static const struct xtest_ac_case xtest_ac_cases[] = {
 
 	/* [P-384] */
 	/* SHA1 hash */
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P384, TEE_MODE_SIGN, TEE_ALG_SHA1,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P384, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_46),
 	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P384, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_47),
@@ -604,7 +673,7 @@ static const struct xtest_ac_case xtest_ac_cases[] = {
 
 	/* [P-384] */
 	/* SHA224 hash */
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P384, TEE_MODE_SIGN, TEE_ALG_SHA224,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P384, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_46),
 	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P384, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_47),
@@ -637,7 +706,7 @@ static const struct xtest_ac_case xtest_ac_cases[] = {
 
 	/* [P-384] */
 	/* SHA256 hash */
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P384, TEE_MODE_SIGN, TEE_ALG_SHA256,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P384, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_46),
 	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P384, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_47),
@@ -670,7 +739,7 @@ static const struct xtest_ac_case xtest_ac_cases[] = {
 
 	/* [P-384] */
 	/* SHA384 hash */
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P384, TEE_MODE_SIGN, TEE_ALG_SHA384,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P384, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_46),
 	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P384, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_47),
@@ -703,7 +772,7 @@ static const struct xtest_ac_case xtest_ac_cases[] = {
 
 	/* [P-384] */
 	/* SHA512 hash */
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P384, TEE_MODE_SIGN, TEE_ALG_SHA512,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P384, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_46),
 	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P384, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_47),
@@ -738,165 +807,165 @@ static const struct xtest_ac_case xtest_ac_cases[] = {
 	/* SHA1 hash */
 	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_61),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_62),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_63),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_64),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_65),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_66),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_67),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_68),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_69),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_70),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_71),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_72),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_73),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_74),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA1,
 			    nist_186_2_ecdsa_testvector_75),
 
 	/* [P-521] */
 	/* SHA224 hash */
 	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_61),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_62),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_63),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_64),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_65),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_66),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_67),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_68),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_69),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_70),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_71),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_72),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_73),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_74),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA224,
 			    nist_186_2_ecdsa_testvector_75),
 
 	/* [P-521] */
 	/* SHA256 hash */
 	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_61),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_62),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_63),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_64),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_65),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_66),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_67),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_68),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_69),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_70),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_71),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_72),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_73),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_74),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA256,
 			    nist_186_2_ecdsa_testvector_75),
 
 	/* [P-521] */
 	/* SHA384 hash */
 	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_61),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_62),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_63),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_64),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_65),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_66),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_67),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_68),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_69),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_70),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_71),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_72),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_73),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_74),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA384,
 			    nist_186_2_ecdsa_testvector_75),
 
 	/* [P-521] */
 	/* SHA512 hash */
 	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_61),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_62),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_63),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_64),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_65),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_66),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_67),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_68),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_69),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_70),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_71),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_72),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_73),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_74),
-	XTEST_AC_ECDSA_CASE(0, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
+	XTEST_AC_ECDSA_CASE(15, TEE_ALG_ECDSA_P521, TEE_MODE_SIGN, TEE_ALG_SHA512,
 			    nist_186_2_ecdsa_testvector_75),
 
 };
@@ -1070,32 +1139,6 @@ static void xtest_tee_test_9000(ADBG_Case_t *c)
 		out_size = sizeof(out);
 		memset(out, 0, sizeof(out));
 		switch (tv->mode) {
-		case TEE_MODE_VERIFY:
-			if (!ADBG_EXPECT_TEEC_SUCCESS(c,
-				ta_crypt_cmd_allocate_operation(c, &session,
-					&op, tv->algo, TEE_MODE_VERIFY,
-					max_key_size)))
-				goto out;
-
-			if (!ADBG_EXPECT_TEEC_SUCCESS(c,
-				ta_crypt_cmd_set_operation_key(c, &session, op,
-					pub_key_handle)))
-				goto out;
-
-			if (!ADBG_EXPECT_TEEC_SUCCESS(c,
-				ta_crypt_cmd_free_transient_object(c, &session,
-					pub_key_handle)))
-				goto out;
-
-			pub_key_handle = TEE_HANDLE_NULL;
-
-			if (!ADBG_EXPECT_TEEC_SUCCESS(c,
-				ta_crypt_cmd_asymmetric_verify(c, &session, op,
-					algo_params, num_algo_params, ptx_hash,
-					ptx_hash_size, tv->ctx, tv->ctx_len)))
-				goto out;
-			break;
-
 		case TEE_MODE_SIGN:
 			if (!ADBG_EXPECT_TEEC_SUCCESS(c,
 				ta_crypt_cmd_allocate_operation(c, &session,
@@ -1153,8 +1196,6 @@ static void xtest_tee_test_9000(ADBG_Case_t *c)
 
 				if (ec_key) {
 					ECDSA_SIG *sig = NULL;
-					uint8_t *der_sig;
-					size_t der_sig_len;
 					BIGNUM *private = BN_bin2bn(tv->params.ecdsa.private,tv->params.ecdsa.private_len, NULL);
 					BIGNUM *point_x = BN_bin2bn(tv->params.ecdsa.public_x,tv->params.ecdsa.public_x_len, NULL);
 					BIGNUM *point_y = BN_bin2bn(tv->params.ecdsa.public_y,tv->params.ecdsa.public_y_len, NULL);
@@ -1165,6 +1206,10 @@ static void xtest_tee_test_9000(ADBG_Case_t *c)
 					ADBG_EXPECT(c,1,EC_KEY_set_private_key(ec_key, private));
 					ADBG_EXPECT(c,1,EC_KEY_set_public_key_affine_coordinates(ec_key, point_x, point_y));
 
+					BN_free(point_x);
+					BN_free(point_y);
+					BN_free(private);
+
 					Do_ADBG_Log("Check with OpenSSL case %d algo 0x%x line %d key size %d",
 							     (int)n, (unsigned int)tv->algo,
 							     (int)tv->line,
@@ -1174,18 +1219,57 @@ static void xtest_tee_test_9000(ADBG_Case_t *c)
 
 					sig = ECDSA_SIG_new();
 					ADBG_EXPECT(c,1,ECDSA_SIG_set0(sig,r,s));
-					ADBG_EXPECT(c,1,ECDSA_SIG_to_bytes(&der_sig,&der_sig_len,sig));
 
-					ADBG_EXPECT(c,1,ECDSA_verify(0,ptx_hash,ptx_hash_size,der_sig,der_sig_len,ec_key));
+					ADBG_EXPECT(c,1,ECDSA_do_verify(ptx_hash,ptx_hash_size,sig,ec_key));
 
-					OPENSSL_free(der_sig);
 					ECDSA_SIG_free(sig);
-					EC_KEY_free(ec_key);
-					BN_free(point_x);
-					BN_free(point_y);
-					BN_free(private);
 					BN_free(r);
 					BN_free(s);
+
+					sig = ECDSA_do_sign(ptx_hash,ptx_hash_size,ec_key);
+					if (sig)
+					{
+						ECDSA_SIG_get0(sig,(const BIGNUM**)&r,(const BIGNUM**)&s);
+
+						ADBG_EXPECT(c,1,BN_bn2bin_padded(out, tv->params.ecdsa.private_len, r));
+						out_size = tv->params.ecdsa.private_len;
+						ADBG_EXPECT(c,1,BN_bn2bin_padded(out + out_size, tv->params.ecdsa.private_len, s));
+						out_size += tv->params.ecdsa.private_len;
+
+						Do_ADBG_Log("OpenSSL signature size %zu", out_size);
+						Do_ADBG_HexLog(out, out_size, 16);
+
+						ECDSA_SIG_free(sig);
+						BN_free(r);
+						BN_free(s);
+
+						if (!ADBG_EXPECT_TEEC_SUCCESS(c,
+							ta_crypt_cmd_allocate_operation(c,
+								&session, &op, tv->algo,
+								TEE_MODE_VERIFY, max_key_size)))
+							goto out;
+
+						if (!ADBG_EXPECT_TEEC_SUCCESS(c,
+							ta_crypt_cmd_set_operation_key(c,
+								&session, op, pub_key_handle)))
+							goto out;
+
+						if (!ADBG_EXPECT_TEEC_SUCCESS(c,
+							ta_crypt_cmd_free_transient_object(c,
+								&session, pub_key_handle)))
+							goto out;
+
+						pub_key_handle = TEE_HANDLE_NULL;
+
+						ADBG_EXPECT_TEEC_SUCCESS(c,
+							ta_crypt_cmd_asymmetric_verify(c,
+								&session, op, algo_params,
+								num_algo_params, ptx_hash,
+								ptx_hash_size, out, out_size));
+
+					}
+
+					EC_KEY_free(ec_key);
 				} else {
 					Do_ADBG_Log("Failed to create key");
 				}
